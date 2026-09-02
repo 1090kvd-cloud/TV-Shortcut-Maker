@@ -36,7 +36,7 @@ It also works as a fast, good-looking app drawer on its own.
 | 🔍 **Full device scan** | Lists every installed package, including apps with no leanback entry point |
 | 🎯 **Smart filters** | `Hidden on TV` · `All apps` · `TV apps` · `Favorites`, each with a live count |
 | 🖼 **Banner generator** | Extracts the icon from the APK and composes it onto a 16:9 canvas at 3× resolution |
-| 🎨 **Three banner styles** | Accent gradient (colour sampled from the icon via Palette), dark minimal, or icon-only |
+| 🎨 **Icon as-is** | The app's original icon, no gradients or overlaid text — the shortcut looks like a normal app |
 | 📌 **Pinned shortcuts** | `ShortcutManagerCompat.requestPinShortcut()` with a launch-proxy trampoline |
 | 🚀 **Built-in drawer** | Launch anything directly, even when the launcher refuses to pin shortcuts |
 | ⭐ **Favorites** | Persisted locally, always one D-Pad press away |
@@ -47,9 +47,9 @@ It also works as a fast, good-looking app drawer on its own.
 
 > Replace these placeholders with real captures (`adb exec-out screencap -p > shot.png`).
 
-| App grid | Detail panel | Generated banner |
+| App grid | Detail panel | Shortcut icon |
 |---|---|---|
-| ![Grid](docs/screenshots/screen1.png) | ![Detail](docs/screenshots/screen2.png) | ![Banner](docs/screenshots/screen3.png) |
+| ![Grid](docs/screenshots/screen1.png) | ![Detail](docs/screenshots/screen2.png) | ![Icon](docs/screenshots/screen3.png) |
 
 ## 🏗 Architecture
 
