@@ -34,7 +34,9 @@ data class AppListUiState(
     val filter: AppFilter = AppFilter.HIDDEN,
     val query: String = "",
     val selectedApp: AppInfo? = null,
-    val bannerStyle: BannerStyle = BannerStyle.GRADIENT_ACCENT,
+    // Default: the app's own icon, untouched — the closest match to how a
+    // normally installed TV app looks on the home screen.
+    val bannerStyle: BannerStyle = BannerStyle.ICON_ONLY,
     val pinningSupported: Boolean = true,
     /** One-shot user feedback; cleared by [AppListViewModel.consumeMessage]. */
     val message: UiMessage? = null

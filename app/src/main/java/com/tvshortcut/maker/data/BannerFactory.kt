@@ -10,7 +10,6 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.RadialGradient
-import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.Typeface
@@ -154,15 +153,7 @@ class BannerFactory(private val context: Context) {
 
         if (icon != null) {
             if (style == BannerStyle.ICON_ONLY) {
-                // Cover the whole banner, cropping the icon centrally.
-                val side = min(icon.width, icon.height)
-                val src = Rect(
-                    (icon.width - side) / 2,
-                    (icon.height - side) / 2,
-                    (icon.width + side) / 2,
-                    (icon.height + side) / 2
-                )
-                canvas.drawBitmap(icon, src, RectF(0f, 0f, w.toFloat(), h.toFloat()), antiAliasPaint())
+                drawIconAsIs(canvas, icon, w, h)
             } else {
                 drawIconTile(canvas, icon, w, h, showLabel)
             }
@@ -172,6 +163,28 @@ class BannerFactory(private val context: Context) {
             drawLabel(canvas, label, w, h)
         }
         return bitmap
+    }
+
+    /**
+     * Draws the icon untouched: centred, aspect ratio preserved, on a fully
+     * transparent 16:9 canvas.
+     *
+     * This is what makes a generated shortcut look like a normally installed
+     * app — the launcher paints its own card behind the transparent area, so
+     * the tile is indistinguishable from the real thing. Nothing is cropped,
+     * stretched or overlaid with text.
+     */
+    private fun drawIconAsIs(canvas: Canvas, icon: Bitmap, w: Int, h: Int) {
+        // Occupy most of the banner height, leaving a small breathing margin.
+        val side = h * 0.78f
+        val left = (w - side) / 2f
+        val top = (h - side) / 2f
+        canvas.drawBitmap(
+            icon,
+            null,
+            RectF(left, top, left + side, top + side),
+            antiAliasPaint()
+        )
     }
 
     /** Diagonal gradient tinted by the icon's accent plus a soft radial glow. */
