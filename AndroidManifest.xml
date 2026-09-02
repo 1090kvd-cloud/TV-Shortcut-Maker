@@ -1,117 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<!--
+  ============================ SHORTCUT STUB TEMPLATE ============================
 
-    <!--
-      ============================ TV declarations ============================
-      `android.software.leanback` marks the app as an Android TV app so that it
-      shows up in the TV launcher. `touchscreen` must be declared as NOT required,
-      otherwise Google Play / the launcher will consider the app phone-only.
-    -->
+  This module is never shipped on its own. Its compiled APK is bundled inside the
+  main app's assets as `stub-template.apk` and used as a template: at runtime the
+  main app copies it, patches a few bytes, replaces the banner, re-signs it and
+  hands it to the package installer. The result is a real installed package that
+  every TV launcher shows — which is exactly why this approach works on firmwares
+  that ignore pinned shortcuts.
+
+  THE PLACEHOLDER TRICK
+  ─────────────────────
+  Strings inside a compiled (binary) AndroidManifest.xml live in a length-prefixed
+  string pool. Rewriting that pool correctly is the fragile part of every APK
+  generator. We avoid it entirely: the two values that must change per shortcut
+  are declared here as placeholders of a FIXED length, so the patcher can
+  overwrite them in place, byte for byte, without touching any offset.
+
+    - package: from applicationId, `com.tvshortcut.s.` + 32 chars -> hash
+    - label:   exactly 48 chars                        -> app name, space-padded
+
+  DO NOT change the length of either placeholder without updating
+  StubPatcher.kt, which asserts on them.
+
+  The target package name is NOT stored here — it lives in assets/target.txt,
+  a plain file the patcher can rewrite at any length.
+
+  targetSdk is deliberately kept at 29: below API 30 the package-visibility
+  filtering does not apply, so the stub can resolve and launch its target without
+  QUERY_ALL_PACKAGES, and v1 (JAR) signing remains valid for installation.
+-->
+<!--
+  NOTE: there is deliberately no `package=` attribute here. AGP 8 rejects it —
+  the namespace comes from build.gradle.kts, and the placeholder package name is
+  injected into the COMPILED manifest from `applicationId`. The placeholder is
+  therefore still present in the built APK, which is all the patcher needs.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-feature
         android:name="android.software.leanback"
-        android:required="true" />
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
-    <!--
-      ========================== Package visibility ===========================
-      Starting with Android 11 (API 30) apps can only see a filtered list of the
-      installed packages. QUERY_ALL_PACKAGES is required because the whole point
-      of this app is to enumerate *every* installed application, including the
-      sideloaded mobile ones that are hidden from the TV launcher.
-
-      NOTE: this permission is restricted on Google Play. That is fine here —
-      the app is distributed as a sideloaded APK / F-Droid style build.
-    -->
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-
-    <!-- Needed to open the "App info" system screen and to request uninstall. -->
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-
-    <!--
-      Lets the app hand generated shortcut APKs to the package installer. The
-      user still confirms every install, and from API 26 must additionally grant
-      "install unknown apps" to this app in system settings.
-    -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-    <!--
-      <queries> is the finer-grained alternative used on devices where
-      QUERY_ALL_PACKAGES is stripped away. We declare both intent filters we
-      care about: the classic phone launcher and the leanback launcher.
-    -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-        </intent>
-    </queries>
-
     <application
-        android:name=".TvShortcutApplication"
-        android:allowBackup="true"
-        android:banner="@drawable/app_banner"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:allowBackup="false"
+        android:banner="@drawable/banner"
+        android:icon="@drawable/banner"
+        android:label="LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TvShortcutMaker"
-        tools:targetApi="34">
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
 
-        <!-- Main app drawer. CATEGORY_LEANBACK_LAUNCHER puts it on the TV home screen. -->
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:screenOrientation="landscape"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
-            android:theme="@style/Theme.TvShortcutMaker">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-                <!-- Kept so the app is also reachable on phones/tablets while debugging. -->
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!--
-          Invisible proxy activity. Every pinned shortcut we create points here
-          with EXTRA_PACKAGE_NAME; the proxy resolves the real launch intent and
-          forwards to it. This indirection is what makes the shortcut survive
-          app updates and lets us fall back between LAUNCHER / LEANBACK_LAUNCHER
-          entry points.
-        -->
-        <activity
-            android:name=".launch.LaunchProxyActivity"
+            android:name="com.tvshortcut.stub.StubLauncherActivity"
             android:exported="true"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:taskAffinity=""
-            android:theme="@style/Theme.TvShortcutMaker.Transparent">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
-                <action android:name="com.tvshortcut.maker.LAUNCH_APP" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN" />
+                <!-- Both categories: the leanback one puts the stub on the TV home
+                     screen, the classic one keeps it reachable on phone launchers. -->
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--
-          Receives the outcome of install sessions. Not exported: the system
-          delivers to it through our own PendingIntent, so no other app needs
-          access.
-        -->
-        <receiver
-            android:name=".data.apk.InstallResultReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.tvshortcut.maker.INSTALL_RESULT" />
-            </intent-filter>
-        </receiver>
-
     </application>
 </manifest>
