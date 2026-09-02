@@ -58,4 +58,13 @@
     <string name="donate_title">Поддержать проект</string>
     <string name="donate_hint">Наведите камеру телефона на код</string>
     <string name="donate_note">Приложение бесплатное, без рекламы и без сбора данных. Донат идёт на тестовые устройства и время разработки.</string>
+
+    <!-- Поиск -->
+    <string name="search_hint">Поиск приложений</string>
+    <string name="search_empty">Ничего не найдено по запросу «%1$s»</string>
+    <string name="search_empty_hint">Проверьте написание или очистите поиск.</string>
+
+    <string name="search_voice">Голосовой поиск</string>
+    <string name="search_voice_prompt">Назовите приложение</string>
+    <string name="search_voice_unavailable">Голосовой ввод недоступен на этом устройстве</string>
 </resources>

@@ -45,6 +45,7 @@ import com.tvshortcut.maker.ui.components.EmptyState
 import com.tvshortcut.maker.ui.components.LoadingState
 import com.tvshortcut.maker.ui.components.MessageBar
 import com.tvshortcut.maker.ui.components.TvFilterChip
+import com.tvshortcut.maker.ui.components.TvSearchField
 import com.tvshortcut.maker.ui.components.TvSegmentedOption
 import com.tvshortcut.maker.ui.theme.TvColors
 import com.tvshortcut.maker.viewmodel.AppListUiState
@@ -68,6 +69,7 @@ fun AppDrawerScreen(
     onAppLaunch: (AppInfo) -> Unit,
     onDismissMessage: () -> Unit,
     onDonateClick: () -> Unit,
+    onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val gridState = rememberLazyGridState()
@@ -109,6 +111,7 @@ fun AppDrawerScreen(
                 state = state,
                 onFilterChange = onFilterChange,
                 onDonateClick = onDonateClick,
+                onQueryChange = onQueryChange,
                 sideInset = sideInset,
                 compact = compact
             )
@@ -117,8 +120,16 @@ fun AppDrawerScreen(
                 state.isLoading -> LoadingState(stringResource(R.string.state_loading))
 
                 state.visibleApps.isEmpty() -> EmptyState(
-                    title = stringResource(R.string.state_empty),
-                    hint = stringResource(R.string.state_empty_hint)
+                    title = if (state.query.isBlank()) {
+                        stringResource(R.string.state_empty)
+                    } else {
+                        stringResource(R.string.search_empty, state.query)
+                    },
+                    hint = if (state.query.isBlank()) {
+                        stringResource(R.string.state_empty_hint)
+                    } else {
+                        stringResource(R.string.search_empty_hint)
+                    }
                 )
 
                 else -> LazyVerticalGrid(
@@ -169,6 +180,7 @@ private fun DrawerHeader(
     state: AppListUiState,
     onFilterChange: (AppFilter) -> Unit,
     onDonateClick: () -> Unit,
+    onQueryChange: (String) -> Unit,
     sideInset: Dp,
     compact: Boolean
 ) {
@@ -225,6 +237,12 @@ private fun DrawerHeader(
                 Modifier
             }
         ) {
+            TvSearchField(
+                query = state.query,
+                onQueryChange = onQueryChange,
+                placeholder = stringResource(R.string.search_hint)
+            )
+
             AppFilter.entries.forEach { filter ->
                 TvFilterChip(
                     label = filter.displayName(),

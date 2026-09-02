@@ -59,4 +59,13 @@
     <string name="donate_hint">Point your phone camera at the code</string>
     <string name="donate_note">The app is free, ad-free and collects no data. A donation goes towards test devices and development time.</string>
     <string name="donate_url" translatable="false">https://boosty.to/tvshortcutmaker/donate</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search apps</string>
+    <string name="search_empty">Nothing matches “%1$s”</string>
+    <string name="search_empty_hint">Check the spelling or clear the search.</string>
+
+    <string name="search_voice">Voice search</string>
+    <string name="search_voice_prompt">Say the app name</string>
+    <string name="search_voice_unavailable">Voice input is unavailable on this device</string>
 </resources>

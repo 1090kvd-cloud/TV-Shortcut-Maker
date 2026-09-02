@@ -65,7 +65,8 @@ private fun TvShortcutApp(viewModel: AppListViewModel) {
             onAppSelected = { viewModel.select(it) },
             onAppLaunch = { viewModel.launch(it) },
             onDismissMessage = viewModel::consumeMessage,
-            onDonateClick = { viewModel.setDonateVisible(true) }
+            onDonateClick = { viewModel.setDonateVisible(true) },
+            onQueryChange = viewModel::setQuery
         )
 
         AppDetailPanel(
