@@ -58,21 +58,27 @@ class ShortcutApkBuilder(private val context: Context) {
      *
      * @param targetPackage package the shortcut should launch
      * @param label         name shown under the banner on the home screen
-     * @param banner        320x180 artwork produced by BannerFactory
+     * @param banner        320x180 artwork used for `android:banner`
+     * @param icon          square icon used for `android:icon` — launchers that
+     *                      draw a round app tile (Google TV) use this one, and
+     *                      feeding them a 16:9 image gets it cropped off-centre
      * @param outputFile    where to write the result
      */
     fun build(
         targetPackage: String,
         label: String,
         banner: Bitmap,
+        icon: Bitmap,
         outputFile: File
     ): File {
         val template = readTemplate()
         val bannerBytes = banner.toPngBytes()
+        val iconBytes = icon.toPngBytes()
         val stubPackageSuffix = packageSuffixFor(targetPackage)
 
         var manifestPatched = false
         var bannerReplaced = false
+        var iconReplaced = false
         var targetWritten = false
 
         ZipInputStream(template.inputStream()).use { zin ->
@@ -106,6 +112,11 @@ class ShortcutApkBuilder(private val context: Context) {
                             bannerReplaced = true
                         }
 
+                        name.isIconResource() -> {
+                            zout.writeEntry(name, iconBytes)
+                            iconReplaced = true
+                        }
+
                         else -> zout.writeEntry(name, bytes)
                     }
 
@@ -125,9 +136,12 @@ class ShortcutApkBuilder(private val context: Context) {
         if (!manifestPatched) {
             throw BuildException("Template is missing AndroidManifest.xml")
         }
-        if (!bannerReplaced) {
-            // Not fatal — the shortcut still works, it just shows the placeholder.
-            android.util.Log.w("ShortcutApkBuilder", "No banner resource found in template")
+        if (!bannerReplaced || !iconReplaced) {
+            // Not fatal — the shortcut still works, it just shows a placeholder.
+            android.util.Log.w(
+                "ShortcutApkBuilder",
+                "Artwork not fully replaced (banner=$bannerReplaced, icon=$iconReplaced)"
+            )
         }
         return outputFile
     }
@@ -280,6 +294,10 @@ class ShortcutApkBuilder(private val context: Context) {
 
     private fun String.isBannerResource(): Boolean =
         startsWith("res/") && endsWith(".png") && contains("banner")
+
+    /** The square artwork behind `android:icon`. */
+    private fun String.isIconResource(): Boolean =
+        startsWith("res/") && endsWith(".png") && contains("appicon")
 
     /** Writes one deflated entry with a fresh CRC. */
     private fun ZipOutputStream.writeEntry(name: String, data: ByteArray) {

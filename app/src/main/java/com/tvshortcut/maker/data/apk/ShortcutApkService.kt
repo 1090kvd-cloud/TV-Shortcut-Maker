@@ -32,7 +32,8 @@ class ShortcutApkService(
     suspend fun createShortcut(
         targetPackage: String,
         label: String,
-        banner: Bitmap
+        banner: Bitmap,
+        icon: Bitmap
     ): ShortcutResult = withContext(Dispatchers.IO) {
         if (!builder.isTemplateAvailable()) {
             return@withContext ShortcutResult.TemplateMissing
@@ -47,7 +48,7 @@ class ShortcutApkService(
         val signed = File(workDir, "shortcut.apk")
 
         try {
-            builder.build(targetPackage, label, banner, unsigned)
+            builder.build(targetPackage, label, banner, icon, unsigned)
             signer.sign(unsigned, signed)
             installer.install(signed, builder.stubPackageNameFor(targetPackage), label)
             ShortcutResult.InstallStarted

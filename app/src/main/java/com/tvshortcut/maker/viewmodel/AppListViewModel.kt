@@ -136,16 +136,24 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
                 return@launch
             }
 
-            val banner = withContext(Dispatchers.Default) {
+            val artwork = withContext(Dispatchers.Default) {
                 val icon = container.bannerFactory.extractIcon(app.packageName, size = 512)
                     ?: app.icon
-                container.bannerFactory.createBanner(icon, app.accentColor, app.label, style)
+                val banner =
+                    container.bannerFactory.createBanner(icon, app.accentColor, app.label, style)
+                banner to icon
+            }
+            val (banner, icon) = artwork
+            if (icon == null) {
+                postMessage(R.string.msg_shortcut_failed, app.packageName, isError = true)
+                return@launch
             }
 
             when (val result = container.shortcutApkService.createShortcut(
                 targetPackage = app.packageName,
                 label = app.label,
-                banner = banner
+                banner = banner,
+                icon = icon
             )) {
                 is ShortcutResult.InstallStarted ->
                     postMessage(R.string.msg_shortcut_install_started, app.label)
