@@ -194,7 +194,10 @@ private fun DrawerHeader(
                 bottom = if (compact) 12.dp else 20.dp
             )
     ) {
-        Row(verticalAlignment = Alignment.Bottom) {
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = stringResource(R.string.app_name),
                 style = if (compact) MaterialTheme.typography.titleLarge
@@ -214,6 +217,15 @@ private fun DrawerHeader(
                     modifier = Modifier.padding(bottom = 6.dp)
                 )
             }
+
+            // Pushed to the right edge of the title line: the filter row can
+            // grow as long as it likes without ever hiding this button.
+            Spacer(Modifier.weight(1f))
+            TvSegmentedOption(
+                label = "\u2665 " + stringResource(R.string.donate_action),
+                selected = false,
+                onClick = onDonateClick
+            )
         }
 
         // Credit line: small, unobtrusive, and always visible without an extra
@@ -251,14 +263,6 @@ private fun DrawerHeader(
                     onClick = { onFilterChange(filter) }
                 )
             }
-
-            // Sits at the end of the filter row so the D-Pad reaches it without
-            // a separate screen, but never before the app list itself.
-            TvSegmentedOption(
-                label = "♥ " + stringResource(R.string.donate_action),
-                selected = false,
-                onClick = onDonateClick
-            )
         }
     }
 }

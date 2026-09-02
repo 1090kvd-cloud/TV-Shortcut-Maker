@@ -65,7 +65,4 @@
     <string name="search_empty">Nothing matches “%1$s”</string>
     <string name="search_empty_hint">Check the spelling or clear the search.</string>
 
-    <string name="search_voice">Voice search</string>
-    <string name="search_voice_prompt">Say the app name</string>
-    <string name="search_voice_unavailable">Voice input is unavailable on this device</string>
 </resources>

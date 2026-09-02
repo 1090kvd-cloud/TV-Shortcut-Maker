@@ -64,7 +64,4 @@
     <string name="search_empty">Ничего не найдено по запросу «%1$s»</string>
     <string name="search_empty_hint">Проверьте написание или очистите поиск.</string>
 
-    <string name="search_voice">Голосовой поиск</string>
-    <string name="search_voice_prompt">Назовите приложение</string>
-    <string name="search_voice_unavailable">Голосовой ввод недоступен на этом устройстве</string>
 </resources>
