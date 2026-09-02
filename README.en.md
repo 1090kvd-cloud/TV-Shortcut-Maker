@@ -210,8 +210,7 @@ USB stick.
 This app is free, ad-free and collects no data — and it will stay that way.
 If it saved you some time, you can support the author:
 
-- ☕ [Boosty](https://boosty.to/YOUR_NAME)
-- 💳 [YooMoney](https://yoomoney.ru/to/YOUR_WALLET_ID)
+- ☕ [Boosty](https://boosty.to/tvshortcutmaker/donate) — one-off donation, any amount
 - ⭐ Free but just as useful: star the repo and tell others about it
 
 Donations go towards test devices (TV boxes from different vendors behave very
@@ -224,14 +223,14 @@ PRs welcome. Please keep comments in English, follow the official Kotlin style
 
 ## 👤 Author
 
-**Viktor Dmitrievich Krivitskiy** — concept, architecture and development.
+**V. D. Krivitskiy** — concept, architecture and development.
 
 Found a bug or have an idea? Open an [issue](../../issues) — that is the best
 way to get in touch.
 
 ## 📄 License
 
-MIT © 2026 Viktor Dmitrievich Krivitskiy — see [LICENSE](LICENSE).
+MIT © 2026 V. D. Krivitskiy — see [LICENSE](LICENSE).
 
 <div align="center">
 <sub>Not affiliated with Google. Android TV is a trademark of Google LLC.</sub>

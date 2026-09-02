@@ -50,6 +50,6 @@
 
     <!-- О программе -->
     <string name="about_developer">Разработчик</string>
-    <string name="about_developer_name">Виктор Дмитриевич Кривицкий</string>
+    <string name="about_developer_name">В. Д. Кривицкий</string>
     <string name="about_version">Версия %1$s</string>
 </resources>

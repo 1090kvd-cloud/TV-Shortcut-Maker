@@ -50,6 +50,6 @@
 
     <!-- About -->
     <string name="about_developer">Developer</string>
-    <string name="about_developer_name">Viktor Dmitrievich Krivitskiy</string>
+    <string name="about_developer_name">V. D. Krivitskiy</string>
     <string name="about_version">Version %1$s</string>
 </resources>
