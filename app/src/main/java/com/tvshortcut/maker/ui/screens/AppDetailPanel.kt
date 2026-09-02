@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -133,13 +134,17 @@ private fun PanelContent(
         value = runCatching { renderBanner(app) }.getOrNull()
     }
 
+    // A side panel only makes sense when there is room beside the grid; on a
+    // phone in portrait it takes the whole screen instead.
+    val compact = LocalConfiguration.current.screenWidthDp < 720
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth(0.42f)
+            .fillMaxWidth(if (compact) 1f else 0.42f)
             .background(TvColors.Surface)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 36.dp, vertical = 40.dp)
+            .padding(horizontal = if (compact) 20.dp else 36.dp, vertical = if (compact) 24.dp else 40.dp)
     ) {
         // ---- Banner preview -------------------------------------------------
         Text(

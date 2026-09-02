@@ -5,12 +5,13 @@
     <!--
       ============================ TV declarations ============================
       `android.software.leanback` marks the app as an Android TV app so that it
-      shows up in the TV launcher. `touchscreen` must be declared as NOT required,
-      otherwise Google Play / the launcher will consider the app phone-only.
+      shows up in the TV launcher, but it is declared as NOT required so the app
+      also installs on phones and tablets, where the UI adapts to portrait.
+      `touchscreen` is likewise optional — TVs have none.
     -->
     <uses-feature
         android:name="android.software.leanback"
-        android:required="true" />
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
@@ -69,8 +70,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="landscape"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
+            android:resizeableActivity="true"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:theme="@style/Theme.TvShortcutMaker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

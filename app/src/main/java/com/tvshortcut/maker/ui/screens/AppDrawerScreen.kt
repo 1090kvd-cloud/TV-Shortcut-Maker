@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -66,6 +71,20 @@ fun AppDrawerScreen(
     val gridState = rememberLazyGridState()
     val firstItemFocus = remember { FocusRequester() }
 
+    // One layout, three form factors. Column count and padding follow the
+    // available width instead of assuming a 16:9 television: a phone in portrait
+    // gets two columns and tight margins, a TV keeps five and the overscan-safe
+    // 48 dp inset.
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val columns = when {
+        screenWidthDp < 500 -> 2
+        screenWidthDp < 720 -> 3
+        screenWidthDp < 1000 -> 4
+        else -> GRID_COLUMNS
+    }
+    val compact = screenWidthDp < 720
+    val sideInset = if (compact) 20.dp else 48.dp
+
     // Move the D-Pad focus into the grid as soon as content is available.
     LaunchedEffect(state.isLoading, state.filter) {
         if (!state.isLoading && state.visibleApps.isNotEmpty()) {
@@ -84,7 +103,12 @@ fun AppDrawerScreen(
     ) {
         Column(Modifier.fillMaxSize()) {
 
-            DrawerHeader(state = state, onFilterChange = onFilterChange)
+            DrawerHeader(
+                state = state,
+                onFilterChange = onFilterChange,
+                sideInset = sideInset,
+                compact = compact
+            )
 
             when {
                 state.isLoading -> LoadingState(stringResource(R.string.state_loading))
@@ -95,13 +119,13 @@ fun AppDrawerScreen(
                 )
 
                 else -> LazyVerticalGrid(
-                    columns = GridCells.Fixed(GRID_COLUMNS),
+                    columns = GridCells.Fixed(columns),
                     state = gridState,
                     contentPadding = PaddingValues(
-                        start = 48.dp, end = 48.dp, top = 8.dp, bottom = 48.dp
+                        start = sideInset, end = sideInset, top = 8.dp, bottom = 48.dp
                     ),
-                    horizontalArrangement = Arrangement.spacedBy(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(if (compact) 16.dp else 24.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(
@@ -140,17 +164,25 @@ fun AppDrawerScreen(
 @Composable
 private fun DrawerHeader(
     state: AppListUiState,
-    onFilterChange: (AppFilter) -> Unit
+    onFilterChange: (AppFilter) -> Unit,
+    sideInset: Dp,
+    compact: Boolean
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 48.dp, end = 48.dp, top = 40.dp, bottom = 20.dp)
+            .padding(
+                start = sideInset,
+                end = sideInset,
+                top = if (compact) 24.dp else 40.dp,
+                bottom = if (compact) 12.dp else 20.dp
+            )
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
                 text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.displayMedium,
+                style = if (compact) MaterialTheme.typography.titleLarge
+                else MaterialTheme.typography.displayMedium,
                 color = TvColors.TextPrimary
             )
             Spacer(Modifier.padding(horizontal = 10.dp))
@@ -168,9 +200,17 @@ private fun DrawerHeader(
             }
         }
 
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(if (compact) 12.dp else 18.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        // Filters scroll horizontally when they no longer fit on a phone.
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = if (compact) {
+                Modifier.horizontalScroll(rememberScrollState())
+            } else {
+                Modifier
+            }
+        ) {
             AppFilter.entries.forEach { filter ->
                 TvFilterChip(
                     label = filter.displayName(),
@@ -194,5 +234,5 @@ private fun AppFilter.displayName(): String = stringResource(
     }
 )
 
-/** Five columns is the sweet spot for 1080p/4K TV panels. */
+/** Five columns is the sweet spot for a 1080p/4K television. */
 private const val GRID_COLUMNS = 5

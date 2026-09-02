@@ -42,6 +42,7 @@ It also works as a fast, good-looking app drawer on its own.
 | ⭐ **Favorites** | Persisted locally, always one D-Pad press away |
 | 🎮 **Made for the remote** | Focus scale-up, animated outlines, depth shadows, 5 % overscan-safe padding |
 | 🌑 **Dark by default** | Near-black background with violet/blue accents — easy on OLED panels |
+| 📱 **Phones too** | Portrait layout, column count follows screen width, detail panel goes full screen |
 
 ## 📸 Screenshots
 
