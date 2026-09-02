@@ -10,7 +10,7 @@
   that ignore pinned shortcuts.
 
   THE PLACEHOLDER TRICK
-  ---------------------
+  ─────────────────────
   Strings inside a compiled (binary) AndroidManifest.xml live in a length-prefixed
   string pool. Rewriting that pool correctly is the fragile part of every APK
   generator. We avoid it entirely: the two values that must change per shortcut

@@ -41,4 +41,13 @@
     <string name="msg_launch_failed">У приложения нет точки входа для запуска</string>
     <string name="msg_launch_error">Не удалось запустить %1$s</string>
     <string name="msg_app_count">приложений: %1$d</string>
+
+    <!-- Ярлыки, генерируемые как APK -->
+    <string name="msg_shortcut_building">Собираю ярлык для %1$s…</string>
+    <string name="msg_shortcut_install_started">Подтвердите установку, чтобы добавить «%1$s» на главный экран</string>
+    <string name="msg_shortcut_installed">«%1$s» добавлено на главный экран</string>
+    <string name="msg_shortcut_install_failed">Установка не удалась: %1$s</string>
+    <string name="msg_shortcut_permission">Разрешите приложению устанавливать пакеты и повторите</string>
+    <string name="msg_shortcut_template_missing">В этой сборке нет шаблона ярлыка — переустановите приложение</string>
+    <string name="msg_shortcut_failed">Не удалось создать ярлык: %1$s</string>
 </resources>

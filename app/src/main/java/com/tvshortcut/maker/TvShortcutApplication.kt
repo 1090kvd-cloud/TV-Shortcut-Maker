@@ -5,6 +5,10 @@ import com.tvshortcut.maker.data.AppRepository
 import com.tvshortcut.maker.data.BannerFactory
 import com.tvshortcut.maker.data.FavoritesStore
 import com.tvshortcut.maker.data.ShortcutHelper
+import com.tvshortcut.maker.data.apk.ApkSigningHelper
+import com.tvshortcut.maker.data.apk.ShortcutApkBuilder
+import com.tvshortcut.maker.data.apk.ShortcutApkService
+import com.tvshortcut.maker.data.apk.ShortcutInstaller
 
 /**
  * Application entry point.
@@ -36,4 +40,12 @@ class AppContainer(application: Application) {
     val favoritesStore: FavoritesStore = FavoritesStore(application)
     val appRepository: AppRepository = AppRepository(application, bannerFactory, favoritesStore)
     val shortcutHelper: ShortcutHelper = ShortcutHelper(application, bannerFactory)
+
+    // Generated-APK pipeline: the path that works on launchers which ignore
+    // pinned shortcuts.
+    private val apkBuilder = ShortcutApkBuilder(application)
+    private val apkSigner = ApkSigningHelper(application)
+    private val apkInstaller = ShortcutInstaller(application)
+    val shortcutApkService: ShortcutApkService =
+        ShortcutApkService(application, apkBuilder, apkSigner, apkInstaller)
 }

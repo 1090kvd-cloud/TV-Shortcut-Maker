@@ -32,7 +32,7 @@ import java.util.zip.ZipOutputStream
  *
  * Everything else lives in ordinary zip entries and can change length freely:
  *   assets/target.txt   ← package name the stub should open
- *   res/**\/banner.png  ← the generated 320x180 artwork
+ *   res/.../banner.png  ← the generated 320x180 artwork
  *
  * The output is UNSIGNED. Pass it to [ApkSigningHelper] before installing.
  */

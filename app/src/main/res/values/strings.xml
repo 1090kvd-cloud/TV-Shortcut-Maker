@@ -41,4 +41,13 @@
     <string name="msg_launch_failed">This app has no launchable entry point</string>
     <string name="msg_launch_error">Unable to start %1$s</string>
     <string name="msg_app_count">%1$d apps</string>
+
+    <!-- Generated APK shortcuts -->
+    <string name="msg_shortcut_building">Building a shortcut for %1$s…</string>
+    <string name="msg_shortcut_install_started">Confirm the installation to add %1$s to the home screen</string>
+    <string name="msg_shortcut_installed">%1$s added to the home screen</string>
+    <string name="msg_shortcut_install_failed">Installation failed: %1$s</string>
+    <string name="msg_shortcut_permission">Allow this app to install packages, then try again</string>
+    <string name="msg_shortcut_template_missing">This build has no shortcut template — reinstall the app</string>
+    <string name="msg_shortcut_failed">Could not create the shortcut: %1$s</string>
 </resources>
