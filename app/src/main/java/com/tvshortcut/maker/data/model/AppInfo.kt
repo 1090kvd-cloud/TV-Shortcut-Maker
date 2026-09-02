@@ -45,15 +45,3 @@ enum class AppFilter(val titleResSuffix: String) {
     TV("tv"),
     FAVORITES("favorites");
 }
-
-/** Visual style used when generating the 320x180 leanback banner. */
-enum class BannerStyle {
-    /** Icon centred on a gradient built from the icon's own dominant colour. */
-    GRADIENT_ACCENT,
-
-    /** Icon centred on the app's dark neutral background. */
-    DARK_MINIMAL,
-
-    /** Icon stretched edge-to-edge, no background decoration. */
-    ICON_ONLY
-}

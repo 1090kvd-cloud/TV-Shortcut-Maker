@@ -49,9 +49,7 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.tvshortcut.maker.R
 import com.tvshortcut.maker.data.model.AppInfo
-import com.tvshortcut.maker.data.model.BannerStyle
 import com.tvshortcut.maker.ui.components.TvActionButton
-import com.tvshortcut.maker.ui.components.TvSegmentedOption
 import com.tvshortcut.maker.ui.theme.TvColors
 
 /**
@@ -64,16 +62,14 @@ import com.tvshortcut.maker.ui.theme.TvColors
 @Composable
 fun AppDetailPanel(
     app: AppInfo?,
-    bannerStyle: BannerStyle,
     @Suppress("UNUSED_PARAMETER") pinningSupported: Boolean,
-    onBannerStyleChange: (BannerStyle) -> Unit,
     onLaunch: (AppInfo) -> Unit,
     onCreateShortcut: (AppInfo) -> Unit,
     onToggleFavorite: (AppInfo) -> Unit,
     onOpenSettings: (AppInfo) -> Unit,
     onUninstall: (AppInfo) -> Unit,
     onDismiss: () -> Unit,
-    renderBanner: suspend (AppInfo, BannerStyle) -> Bitmap,
+    renderBanner: suspend (AppInfo) -> Bitmap,
     modifier: Modifier = Modifier
 ) {
     // The remote's BACK button closes the panel before leaving the app.
@@ -100,8 +96,6 @@ fun AppDetailPanel(
                 if (app != null) {
                     PanelContent(
                         app = app,
-                        bannerStyle = bannerStyle,
-                        onBannerStyleChange = onBannerStyleChange,
                         onLaunch = onLaunch,
                         onCreateShortcut = onCreateShortcut,
                         onToggleFavorite = onToggleFavorite,
@@ -118,14 +112,12 @@ fun AppDetailPanel(
 @Composable
 private fun PanelContent(
     app: AppInfo,
-    bannerStyle: BannerStyle,
-    onBannerStyleChange: (BannerStyle) -> Unit,
     onLaunch: (AppInfo) -> Unit,
     onCreateShortcut: (AppInfo) -> Unit,
     onToggleFavorite: (AppInfo) -> Unit,
     onOpenSettings: (AppInfo) -> Unit,
     onUninstall: (AppInfo) -> Unit,
-    renderBanner: suspend (AppInfo, BannerStyle) -> Bitmap
+    renderBanner: suspend (AppInfo) -> Bitmap
 ) {
     val firstAction = remember { FocusRequester() }
 
@@ -137,8 +129,8 @@ private fun PanelContent(
 
     // Banner rendering happens off the main thread inside the ViewModel; the
     // key list makes it re-run when either the app or the style changes.
-    val preview by produceState<Bitmap?>(initialValue = null, app.packageName, bannerStyle) {
-        value = runCatching { renderBanner(app, bannerStyle) }.getOrNull()
+    val preview by produceState<Bitmap?>(initialValue = null, app.packageName) {
+        value = runCatching { renderBanner(app) }.getOrNull()
     }
 
     Column(
@@ -170,19 +162,6 @@ private fun PanelContent(
                     contentDescription = stringResource(R.string.detail_banner_preview, app.label),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        // ---- Banner style picker -------------------------------------------
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            BannerStyle.entries.forEach { style ->
-                TvSegmentedOption(
-                    label = stringResource(style.labelRes()),
-                    selected = style == bannerStyle,
-                    onClick = { onBannerStyleChange(style) }
                 )
             }
         }
@@ -264,11 +243,4 @@ private fun PanelContent(
             )
         }
     }
-}
-
-/** String resource holding the human label for a banner style. */
-private fun BannerStyle.labelRes(): Int = when (this) {
-    BannerStyle.GRADIENT_ACCENT -> R.string.banner_style_gradient
-    BannerStyle.DARK_MINIMAL -> R.string.banner_style_dark
-    BannerStyle.ICON_ONLY -> R.string.banner_style_icon
 }

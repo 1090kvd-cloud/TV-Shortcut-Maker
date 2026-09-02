@@ -27,9 +27,6 @@
     <!-- Detail panel -->
     <string name="detail_preview_title">Shortcut preview</string>
     <string name="detail_banner_preview">Generated banner for %1$s</string>
-    <string name="banner_style_gradient">Gradient</string>
-    <string name="banner_style_dark">Dark</string>
-    <string name="banner_style_icon">Icon only</string>
     <string name="detail_type_tv">TV app</string>
     <string name="detail_type_mobile">Mobile app</string>
     <string name="detail_system">System</string>

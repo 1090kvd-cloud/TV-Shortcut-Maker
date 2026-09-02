@@ -18,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.palette.graphics.Palette
-import com.tvshortcut.maker.data.model.BannerStyle
 import kotlin.math.max
 import kotlin.math.min
 
@@ -125,140 +124,40 @@ class BannerFactory(private val context: Context) {
     // ---------------------------------------------------------------------
 
     /**
-     * Draws the final 16:9 banner.
+     * Builds the 16:9 artwork for `android:banner`: the app's own icon, centred,
+     * aspect ratio preserved, on a transparent canvas.
      *
-     * @param icon      Square app icon.
-     * @param accent    Accent colour, normally produced by [accentColorOf].
-     * @param label     App name printed next to the icon (ignored for [BannerStyle.ICON_ONLY]).
-     * @param style     Background treatment.
-     * @param showLabel Set to false when the launcher already renders the title itself.
+     * No gradients, no overlaid text. The launcher paints its own card behind
+     * the transparent area and draws the title itself, which is what makes a
+     * generated shortcut indistinguishable from a normally installed app.
      */
-    fun createBanner(
-        icon: Bitmap?,
-        accent: Int,
-        label: String,
-        style: BannerStyle = BannerStyle.GRADIENT_ACCENT,
-        showLabel: Boolean = true
-    ): Bitmap {
+    fun createBanner(icon: Bitmap?): Bitmap {
         val w = BANNER_WIDTH * BANNER_SCALE
         val h = BANNER_HEIGHT * BANNER_SCALE
         val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-
-        when (style) {
-            BannerStyle.GRADIENT_ACCENT -> drawAccentBackground(canvas, w, h, accent)
-            BannerStyle.DARK_MINIMAL -> drawDarkBackground(canvas, w, h)
-            BannerStyle.ICON_ONLY -> Unit // fully transparent, icon fills the frame
-        }
 
         if (icon != null) {
-            if (style == BannerStyle.ICON_ONLY) {
-                drawIconAsIs(canvas, icon, w, h)
-            } else {
-                drawIconTile(canvas, icon, w, h, showLabel)
-            }
-        }
-
-        if (showLabel && style != BannerStyle.ICON_ONLY) {
-            drawLabel(canvas, label, w, h)
+            val canvas = Canvas(bitmap)
+            val side = h * 0.78f
+            val left = (w - side) / 2f
+            val top = (h - side) / 2f
+            canvas.drawBitmap(
+                icon,
+                null,
+                RectF(left, top, left + side, top + side),
+                antiAliasPaint()
+            )
         }
         return bitmap
     }
 
     /**
-     * Draws the icon untouched: centred, aspect ratio preserved, on a fully
-     * transparent 16:9 canvas.
-     *
-     * This is what makes a generated shortcut look like a normally installed
-     * app — the launcher paints its own card behind the transparent area, so
-     * the tile is indistinguishable from the real thing. Nothing is cropped,
-     * stretched or overlaid with text.
+     * Square artwork for `android:icon`, used by launchers that draw a round
+     * tile (Google TV does). The icon is passed through untouched — cropping or
+     * recolouring it here is exactly what makes a shortcut look "not native".
      */
-    private fun drawIconAsIs(canvas: Canvas, icon: Bitmap, w: Int, h: Int) {
-        // Occupy most of the banner height, leaving a small breathing margin.
-        val side = h * 0.78f
-        val left = (w - side) / 2f
-        val top = (h - side) / 2f
-        canvas.drawBitmap(
-            icon,
-            null,
-            RectF(left, top, left + side, top + side),
-            antiAliasPaint()
-        )
-    }
-
-    /** Diagonal gradient tinted by the icon's accent plus a soft radial glow. */
-    private fun drawAccentBackground(canvas: Canvas, w: Int, h: Int, accent: Int) {
-        val top = blend(accent, NEUTRAL_DARK, 0.55f)
-        val bottom = blend(accent, NEUTRAL_DARK, 0.9f)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            shader = LinearGradient(
-                0f, 0f, w.toFloat(), h.toFloat(),
-                top, bottom, Shader.TileMode.CLAMP
-            )
-        }
-        canvas.drawRect(0f, 0f, w.toFloat(), h.toFloat(), paint)
-
-        // Glow behind the icon so the composition has a focal point.
-        val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            shader = RadialGradient(
-                w * 0.26f, h * 0.5f, h * 0.75f,
-                intArrayOf(withAlpha(accent, 140), withAlpha(accent, 0)),
-                floatArrayOf(0f, 1f),
-                Shader.TileMode.CLAMP
-            )
-        }
-        canvas.drawRect(0f, 0f, w.toFloat(), h.toFloat(), glow)
-    }
-
-    /** Neutral dark card, matching the in-app surface colour. */
-    private fun drawDarkBackground(canvas: Canvas, w: Int, h: Int) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            shader = LinearGradient(
-                0f, 0f, 0f, h.toFloat(),
-                NEUTRAL_SURFACE, NEUTRAL_DARK, Shader.TileMode.CLAMP
-            )
-        }
-        canvas.drawRect(0f, 0f, w.toFloat(), h.toFloat(), paint)
-    }
-
-    /** Rounded "app tile" holding the icon on the left third of the banner. */
-    private fun drawIconTile(canvas: Canvas, icon: Bitmap, w: Int, h: Int, compact: Boolean) {
-        val tile = h * if (compact) 0.56f else 0.62f
-        val cx = if (compact) w * 0.24f else w * 0.5f
-        val cy = h * 0.5f - if (compact) 0f else h * 0.06f
-        val rect = RectF(cx - tile / 2, cy - tile / 2, cx + tile / 2, cy + tile / 2)
-
-        // Soft shadow under the tile.
-        canvas.drawRoundRect(
-            RectF(rect.left, rect.top + tile * 0.06f, rect.right, rect.bottom + tile * 0.06f),
-            tile * 0.22f, tile * 0.22f,
-            Paint(Paint.ANTI_ALIAS_FLAG).apply { color = withAlpha(Color.BLACK, 90) }
-        )
-        canvas.drawBitmap(
-            roundCorners(icon, rect.width().toInt().coerceAtLeast(1)),
-            null, rect, antiAliasPaint()
-        )
-    }
-
-    /** App title, truncated with an ellipsis so it never overflows the banner. */
-    private fun drawLabel(canvas: Canvas, label: String, w: Int, h: Int) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE
-            textSize = h * 0.13f
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            setShadowLayer(6f, 0f, 2f, withAlpha(Color.BLACK, 160))
-        }
-        val left = w * 0.42f
-        val available = w - left - w * 0.06f
-        var text = label
-        while (paint.measureText(text) > available && text.length > 3) {
-            text = text.dropLast(2)
-        }
-        if (text != label) text = "$text…"
-        val baseline = h * 0.5f + paint.textSize * 0.35f
-        canvas.drawText(text, left, baseline, paint)
-    }
+    fun createIconArtwork(icon: Bitmap?, size: Int = 512): Bitmap =
+        icon ?: Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
 
     /** Applies a 22 % corner radius, matching Material You icon shapes. */
     private fun roundCorners(source: Bitmap, size: Int): Bitmap {

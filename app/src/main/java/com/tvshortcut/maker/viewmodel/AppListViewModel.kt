@@ -13,7 +13,6 @@ import com.tvshortcut.maker.TvShortcutApplication
 import com.tvshortcut.maker.data.model.AppFilter
 import com.tvshortcut.maker.data.model.AppInfo
 import com.tvshortcut.maker.data.apk.ShortcutResult
-import com.tvshortcut.maker.data.model.BannerStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,9 +33,6 @@ data class AppListUiState(
     val filter: AppFilter = AppFilter.HIDDEN,
     val query: String = "",
     val selectedApp: AppInfo? = null,
-    // Default: the app's own icon, untouched — the closest match to how a
-    // normally installed TV app looks on the home screen.
-    val bannerStyle: BannerStyle = BannerStyle.ICON_ONLY,
     val pinningSupported: Boolean = true,
     /** One-shot user feedback; cleared by [AppListViewModel.consumeMessage]. */
     val message: UiMessage? = null
@@ -97,8 +93,6 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
 
     fun select(app: AppInfo?) = _uiState.update { it.copy(selectedApp = app) }
 
-    fun setBannerStyle(style: BannerStyle) = _uiState.update { it.copy(bannerStyle = style) }
-
     fun consumeMessage() = _uiState.update { it.copy(message = null) }
 
     // ---------------------------------------------------------------------
@@ -128,26 +122,21 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
      */
     fun createShortcut(app: AppInfo) {
         viewModelScope.launch {
-            val style = _uiState.value.bannerStyle
             postMessage(R.string.msg_shortcut_building, app.label)
 
             if (!container.shortcutApkService.isSupported()) {
-                createPinnedShortcut(app, style)
+                createPinnedShortcut(app)
                 return@launch
             }
 
             val artwork = withContext(Dispatchers.Default) {
-                val icon = container.bannerFactory.extractIcon(app.packageName, size = 512)
+                val raw = container.bannerFactory.extractIcon(app.packageName, size = 512)
                     ?: app.icon
-                val banner =
-                    container.bannerFactory.createBanner(icon, app.accentColor, app.label, style)
-                banner to icon
+                val banner = container.bannerFactory.createBanner(raw)
+                val square = container.bannerFactory.createIconArtwork(raw)
+                banner to square
             }
             val (banner, icon) = artwork
-            if (icon == null) {
-                postMessage(R.string.msg_shortcut_failed, app.packageName, isError = true)
-                return@launch
-            }
 
             when (val result = container.shortcutApkService.createShortcut(
                 targetPackage = app.packageName,
@@ -166,7 +155,7 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
                 is ShortcutResult.TemplateMissing -> {
                     // Packaging problem — still try the legacy path rather than
                     // leaving the user with nothing.
-                    createPinnedShortcut(app, style)
+                    createPinnedShortcut(app)
                 }
 
                 is ShortcutResult.Failed ->
@@ -176,9 +165,9 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     /** Legacy path: ask the launcher to pin a shortcut. */
-    private suspend fun createPinnedShortcut(app: AppInfo, style: BannerStyle) {
+    private suspend fun createPinnedShortcut(app: AppInfo) {
         val pinned = withContext(Dispatchers.Default) {
-            container.shortcutHelper.pinShortcut(app, style)
+            container.shortcutHelper.pinShortcut(app)
         }
         if (pinned) {
             postMessage(R.string.msg_pin_ok, app.label)
@@ -207,11 +196,11 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
 
     fun requestUninstall(app: AppInfo) = container.appRepository.requestUninstall(app.packageName)
 
-    /** Renders a preview of the banner exactly as it will be pinned. */
-    suspend fun renderBannerPreview(app: AppInfo, style: BannerStyle): Bitmap =
+    /** Renders a preview of the artwork exactly as it will be installed. */
+    suspend fun renderBannerPreview(app: AppInfo): Bitmap =
         withContext(Dispatchers.Default) {
             val icon = container.bannerFactory.extractIcon(app.packageName, size = 384) ?: app.icon
-            container.bannerFactory.createBanner(icon, app.accentColor, app.label, style)
+            container.bannerFactory.createBanner(icon)
         }
 
     /**

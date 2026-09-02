@@ -7,7 +7,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.tvshortcut.maker.data.model.AppInfo
-import com.tvshortcut.maker.data.model.BannerStyle
 import com.tvshortcut.maker.launch.LaunchProxyActivity
 
 /**
@@ -42,8 +41,8 @@ class ShortcutHelper(
      * @return `true` when the request was accepted (the launcher may still show
      *         a confirmation dialog), `false` when pinning is unavailable.
      */
-    fun pinShortcut(app: AppInfo, style: BannerStyle = BannerStyle.GRADIENT_ACCENT): Boolean {
-        val shortcut = buildShortcut(app, style)
+    fun pinShortcut(app: AppInfo): Boolean {
+        val shortcut = buildShortcut(app)
 
         // Publish as a dynamic shortcut regardless — harmless, and it makes the
         // entry discoverable through the launcher's shortcut APIs.
@@ -62,17 +61,11 @@ class ShortcutHelper(
         }
     }
 
-    private fun buildShortcut(app: AppInfo, style: BannerStyle): ShortcutInfoCompat {
+    private fun buildShortcut(app: AppInfo): ShortcutInfoCompat {
         // A high-resolution icon is extracted specifically for the banner so the
         // artwork is not built from the small grid thumbnail.
         val hiResIcon = bannerFactory.extractIcon(app.packageName, size = 512) ?: app.icon
-        val banner = bannerFactory.createBanner(
-            icon = hiResIcon,
-            accent = app.accentColor,
-            label = app.label,
-            style = style,
-            showLabel = true
-        )
+        val banner = bannerFactory.createBanner(hiResIcon)
 
         return ShortcutInfoCompat.Builder(context, shortcutId(app.packageName))
             .setShortLabel(app.label.take(SHORT_LABEL_MAX))

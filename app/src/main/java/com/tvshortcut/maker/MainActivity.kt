@@ -68,9 +68,7 @@ private fun TvShortcutApp(viewModel: AppListViewModel) {
 
         AppDetailPanel(
             app = state.selectedApp,
-            bannerStyle = state.bannerStyle,
             pinningSupported = state.pinningSupported,
-            onBannerStyleChange = viewModel::setBannerStyle,
             onLaunch = { viewModel.launch(it) },
             onCreateShortcut = {
                 viewModel.createShortcut(it)

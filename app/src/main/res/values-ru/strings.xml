@@ -27,9 +27,6 @@
     <!-- Панель сведений -->
     <string name="detail_preview_title">Превью ярлыка</string>
     <string name="detail_banner_preview">Сгенерированный баннер для %1$s</string>
-    <string name="banner_style_gradient">Градиент</string>
-    <string name="banner_style_dark">Тёмный</string>
-    <string name="banner_style_icon">Только иконка</string>
     <string name="detail_type_tv">ТВ-приложение</string>
     <string name="detail_type_mobile">Мобильное приложение</string>
     <string name="detail_system">Системное</string>
