@@ -200,6 +200,16 @@ private fun DrawerHeader(
             }
         }
 
+        // Credit line: small, unobtrusive, and always visible without an extra
+        // screen — a TV remote makes buried "About" pages annoying to reach.
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = stringResource(R.string.about_developer) + ": " +
+                stringResource(R.string.about_developer_name),
+            style = MaterialTheme.typography.labelMedium,
+            color = TvColors.TextTertiary
+        )
+
         Spacer(Modifier.height(if (compact) 12.dp else 18.dp))
 
         // Filters scroll horizontally when they no longer fit on a phone.

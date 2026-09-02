@@ -47,4 +47,9 @@
     <string name="msg_shortcut_permission">Allow this app to install packages, then try again</string>
     <string name="msg_shortcut_template_missing">This build has no shortcut template — reinstall the app</string>
     <string name="msg_shortcut_failed">Could not create the shortcut: %1$s</string>
+
+    <!-- About -->
+    <string name="about_developer">Developer</string>
+    <string name="about_developer_name">Viktor Dmitrievich Krivitskiy</string>
+    <string name="about_version">Version %1$s</string>
 </resources>

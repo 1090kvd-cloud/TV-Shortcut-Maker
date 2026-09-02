@@ -222,9 +222,16 @@ differently) and the time spent chasing bugs.
 PRs welcome. Please keep comments in English, follow the official Kotlin style
 (`kotlin.code.style=official`) and run `./gradlew lint` before opening a PR.
 
+## 👤 Author
+
+**Viktor Dmitrievich Krivitskiy** — concept, architecture and development.
+
+Found a bug or have an idea? Open an [issue](../../issues) — that is the best
+way to get in touch.
+
 ## 📄 License
 
-MIT — see [LICENSE](LICENSE).
+MIT © 2026 Viktor Dmitrievich Krivitskiy — see [LICENSE](LICENSE).
 
 <div align="center">
 <sub>Not affiliated with Google. Android TV is a trademark of Google LLC.</sub>
