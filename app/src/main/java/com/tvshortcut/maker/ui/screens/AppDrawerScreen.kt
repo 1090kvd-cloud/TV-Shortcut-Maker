@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
@@ -194,19 +195,36 @@ private fun DrawerHeader(
                 bottom = if (compact) 12.dp else 20.dp
             )
     ) {
+        // The title block takes a weight, so it absorbs whatever space is left
+        // AFTER the donate button has been measured. Done the other way round —
+        // an unweighted title next to a weighted spacer — a long app count
+        // squeezes the button down to zero width on a phone screen.
         Row(
-            verticalAlignment = Alignment.Bottom,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(R.string.app_name),
-                style = if (compact) MaterialTheme.typography.titleLarge
-                else MaterialTheme.typography.displayMedium,
-                color = TvColors.TextPrimary
-            )
-            Spacer(Modifier.padding(horizontal = 10.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.app_name),
+                    style = if (compact) MaterialTheme.typography.titleLarge
+                    else MaterialTheme.typography.displayMedium,
+                    color = TvColors.TextPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = stringResource(R.string.about_developer) + ": " +
+                        stringResource(R.string.about_developer_name),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = TvColors.TextTertiary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
             AnimatedVisibility(
-                visible = !state.isLoading,
+                visible = !state.isLoading && !compact,
                 enter = fadeIn() + slideInHorizontally(),
                 exit = fadeOut() + slideOutHorizontally()
             ) {
@@ -214,29 +232,17 @@ private fun DrawerHeader(
                     text = stringResource(R.string.msg_app_count, state.visibleApps.size),
                     style = MaterialTheme.typography.bodyLarge,
                     color = TvColors.TextTertiary,
-                    modifier = Modifier.padding(bottom = 6.dp)
+                    maxLines = 1,
+                    modifier = Modifier.padding(end = 14.dp)
                 )
             }
 
-            // Pushed to the right edge of the title line: the filter row can
-            // grow as long as it likes without ever hiding this button.
-            Spacer(Modifier.weight(1f))
             TvSegmentedOption(
                 label = "\u2665 " + stringResource(R.string.donate_action),
                 selected = false,
                 onClick = onDonateClick
             )
         }
-
-        // Credit line: small, unobtrusive, and always visible without an extra
-        // screen — a TV remote makes buried "About" pages annoying to reach.
-        Spacer(Modifier.height(4.dp))
-        Text(
-            text = stringResource(R.string.about_developer) + ": " +
-                stringResource(R.string.about_developer_name),
-            style = MaterialTheme.typography.labelMedium,
-            color = TvColors.TextTertiary
-        )
 
         Spacer(Modifier.height(if (compact) 12.dp else 18.dp))
 
