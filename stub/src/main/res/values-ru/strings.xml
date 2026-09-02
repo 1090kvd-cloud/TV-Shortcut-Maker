@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stub_name">Ярлык</string>
+
+    <string name="stub_not_configured">Ярлык не настроен</string>
+    <string name="stub_not_installed">Приложение %1$s не установлено</string>
+    <string name="stub_cannot_open">Не удалось открыть %1$s</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The launcher label comes from the manifest placeholder, not from here. -->
+    <string name="stub_name">Shortcut</string>
+
+    <!-- Error toasts shown by StubLauncherActivity. -->
+    <string name="stub_not_configured">Shortcut is not configured</string>
+    <string name="stub_not_installed">%1$s is not installed</string>
+    <string name="stub_cannot_open">Unable to open %1$s</string>
+</resources>

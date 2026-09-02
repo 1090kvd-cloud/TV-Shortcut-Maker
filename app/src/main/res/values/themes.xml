@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Compose draws the whole UI, so the XML theme only needs to provide a dark
+      window background (prevents a white flash during cold start) and hide the
+      action bar.
+    -->
+    <style name="Theme.TvShortcutMaker" parent="android:Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <!-- Used by the invisible LaunchProxyActivity. -->
+    <style name="Theme.TvShortcutMaker.Transparent" parent="android:Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>

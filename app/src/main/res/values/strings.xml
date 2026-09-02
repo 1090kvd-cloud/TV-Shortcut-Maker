@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Shortcut Maker</string>
+    <string name="app_subtitle">Launch anything on your TV</string>
+
+    <!-- Filters -->
+    <string name="filter_hidden">Hidden on TV</string>
+    <string name="filter_all">All apps</string>
+    <string name="filter_tv">TV apps</string>
+    <string name="filter_favorites">Favorites</string>
+
+    <!-- Actions -->
+    <string name="action_launch">Launch</string>
+    <string name="action_pin">Add to home screen</string>
+    <string name="action_favorite_add">Add to favorites</string>
+    <string name="action_favorite_remove">Remove from favorites</string>
+    <string name="action_app_info">App info</string>
+    <string name="action_uninstall">Uninstall</string>
+    <string name="action_close">Close</string>
+    <string name="action_retry">Retry</string>
+
+    <!-- States -->
+    <string name="state_loading">Scanning installed applications…</string>
+    <string name="state_empty">Nothing here yet</string>
+    <string name="state_empty_hint">Try another filter or install a sideloaded app first.</string>
+
+    <!-- Detail panel -->
+    <string name="detail_preview_title">Shortcut preview</string>
+    <string name="detail_banner_preview">Generated banner for %1$s</string>
+    <string name="banner_style_gradient">Gradient</string>
+    <string name="banner_style_dark">Dark</string>
+    <string name="banner_style_icon">Icon only</string>
+    <string name="detail_type_tv">TV app</string>
+    <string name="detail_type_mobile">Mobile app</string>
+    <string name="detail_system">System</string>
+    <string name="detail_separator">  ·  </string>
+
+    <!-- Messages -->
+    <string name="msg_pin_ok">Shortcut for %1$s sent to the home screen</string>
+    <string name="msg_pin_unsupported">This launcher does not support pinned shortcuts — use Favorites instead</string>
+    <string name="msg_launch_failed">This app has no launchable entry point</string>
+    <string name="msg_launch_error">Unable to start %1$s</string>
+    <string name="msg_app_count">%1$d apps</string>
+</resources>

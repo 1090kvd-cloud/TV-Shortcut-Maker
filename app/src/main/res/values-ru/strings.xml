@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Shortcut Maker</string>
+    <string name="app_subtitle">Запускайте на телевизоре что угодно</string>
+
+    <!-- Фильтры -->
+    <string name="filter_hidden">Скрытые на ТВ</string>
+    <string name="filter_all">Все приложения</string>
+    <string name="filter_tv">ТВ-приложения</string>
+    <string name="filter_favorites">Избранное</string>
+
+    <!-- Действия -->
+    <string name="action_launch">Запустить</string>
+    <string name="action_pin">Добавить на главный экран</string>
+    <string name="action_favorite_add">В избранное</string>
+    <string name="action_favorite_remove">Убрать из избранного</string>
+    <string name="action_app_info">О приложении</string>
+    <string name="action_uninstall">Удалить</string>
+    <string name="action_close">Закрыть</string>
+    <string name="action_retry">Повторить</string>
+
+    <!-- Состояния -->
+    <string name="state_loading">Сканирую установленные приложения…</string>
+    <string name="state_empty">Здесь пока пусто</string>
+    <string name="state_empty_hint">Выберите другой фильтр или установите приложение сайдлоудом.</string>
+
+    <!-- Панель сведений -->
+    <string name="detail_preview_title">Превью ярлыка</string>
+    <string name="detail_banner_preview">Сгенерированный баннер для %1$s</string>
+    <string name="banner_style_gradient">Градиент</string>
+    <string name="banner_style_dark">Тёмный</string>
+    <string name="banner_style_icon">Только иконка</string>
+    <string name="detail_type_tv">ТВ-приложение</string>
+    <string name="detail_type_mobile">Мобильное приложение</string>
+    <string name="detail_system">Системное</string>
+    <string name="detail_separator">  ·  </string>
+
+    <!-- Сообщения -->
+    <string name="msg_pin_ok">Ярлык «%1$s» отправлен на главный экран</string>
+    <string name="msg_pin_unsupported">Лаунчер не поддерживает закреплённые ярлыки — используйте Избранное</string>
+    <string name="msg_launch_failed">У приложения нет точки входа для запуска</string>
+    <string name="msg_launch_error">Не удалось запустить %1$s</string>
+    <string name="msg_app_count">приложений: %1$d</string>
+</resources>
