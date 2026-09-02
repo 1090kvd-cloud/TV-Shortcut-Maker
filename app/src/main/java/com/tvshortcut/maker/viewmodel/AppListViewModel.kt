@@ -33,6 +33,8 @@ data class AppListUiState(
     val filter: AppFilter = AppFilter.HIDDEN,
     val query: String = "",
     val selectedApp: AppInfo? = null,
+    /** Whether the donation panel with the QR code is open. */
+    val showDonate: Boolean = false,
     val pinningSupported: Boolean = true,
     /** One-shot user feedback; cleared by [AppListViewModel.consumeMessage]. */
     val message: UiMessage? = null
@@ -92,6 +94,8 @@ class AppListViewModel(private val container: AppContainer) : ViewModel() {
     fun setQuery(query: String) = _uiState.update { it.copy(query = query) }
 
     fun select(app: AppInfo?) = _uiState.update { it.copy(selectedApp = app) }
+
+    fun setDonateVisible(visible: Boolean) = _uiState.update { it.copy(showDonate = visible) }
 
     fun consumeMessage() = _uiState.update { it.copy(message = null) }
 

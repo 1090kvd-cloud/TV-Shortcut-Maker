@@ -52,4 +52,11 @@
     <string name="about_developer">Developer</string>
     <string name="about_developer_name">V. D. Krivitskiy</string>
     <string name="about_version">Version %1$s</string>
+
+    <!-- Donation -->
+    <string name="donate_action">Support the project</string>
+    <string name="donate_title">Support the project</string>
+    <string name="donate_hint">Point your phone camera at the code</string>
+    <string name="donate_note">The app is free, ad-free and collects no data. A donation goes towards test devices and development time.</string>
+    <string name="donate_url" translatable="false">https://boosty.to/tvshortcutmaker/donate</string>
 </resources>

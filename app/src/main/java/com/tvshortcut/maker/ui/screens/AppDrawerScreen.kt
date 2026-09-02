@@ -45,6 +45,7 @@ import com.tvshortcut.maker.ui.components.EmptyState
 import com.tvshortcut.maker.ui.components.LoadingState
 import com.tvshortcut.maker.ui.components.MessageBar
 import com.tvshortcut.maker.ui.components.TvFilterChip
+import com.tvshortcut.maker.ui.components.TvSegmentedOption
 import com.tvshortcut.maker.ui.theme.TvColors
 import com.tvshortcut.maker.viewmodel.AppListUiState
 
@@ -66,6 +67,7 @@ fun AppDrawerScreen(
     onAppSelected: (AppInfo) -> Unit,
     onAppLaunch: (AppInfo) -> Unit,
     onDismissMessage: () -> Unit,
+    onDonateClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val gridState = rememberLazyGridState()
@@ -106,6 +108,7 @@ fun AppDrawerScreen(
             DrawerHeader(
                 state = state,
                 onFilterChange = onFilterChange,
+                onDonateClick = onDonateClick,
                 sideInset = sideInset,
                 compact = compact
             )
@@ -165,6 +168,7 @@ fun AppDrawerScreen(
 private fun DrawerHeader(
     state: AppListUiState,
     onFilterChange: (AppFilter) -> Unit,
+    onDonateClick: () -> Unit,
     sideInset: Dp,
     compact: Boolean
 ) {
@@ -229,6 +233,14 @@ private fun DrawerHeader(
                     onClick = { onFilterChange(filter) }
                 )
             }
+
+            // Sits at the end of the filter row so the D-Pad reaches it without
+            // a separate screen, but never before the app list itself.
+            TvSegmentedOption(
+                label = "♥ " + stringResource(R.string.donate_action),
+                selected = false,
+                onClick = onDonateClick
+            )
         }
     }
 }

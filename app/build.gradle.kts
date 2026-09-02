@@ -116,6 +116,9 @@ dependencies {
     implementation(libs.androidx.tv.material)
     implementation(libs.androidx.tv.foundation)
 
+    // QR code rendering for the donation panel
+    implementation(libs.zxing.core)
+
     // Colour extraction for generated banners
     implementation(libs.androidx.palette)
 

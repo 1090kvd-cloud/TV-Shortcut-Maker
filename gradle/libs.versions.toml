@@ -15,6 +15,7 @@ palette = "1.0.0"             # Used to pick an accent colour out of an app icon
 coroutines = "1.9.0"
 apksig = "8.7.2"
 desugar = "2.1.2"
+zxing = "3.5.3"
 junit = "4.13.2"
 
 [libraries]
@@ -41,6 +42,7 @@ androidx-tv-material = { group = "androidx.tv", name = "tv-material", version.re
 androidx-tv-foundation = { group = "androidx.tv", name = "tv-foundation", version.ref = "tvFoundation" }
 
 # --- Misc -------------------------------------------------------------------
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 apksig = { group = "com.android.tools.build", name = "apksig", version.ref = "apksig" }
 androidx-palette = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette" }

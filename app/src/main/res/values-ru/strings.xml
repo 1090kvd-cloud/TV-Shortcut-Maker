@@ -52,4 +52,10 @@
     <string name="about_developer">Разработчик</string>
     <string name="about_developer_name">В. Д. Кривицкий</string>
     <string name="about_version">Версия %1$s</string>
+
+    <!-- Поддержка проекта -->
+    <string name="donate_action">Поддержать</string>
+    <string name="donate_title">Поддержать проект</string>
+    <string name="donate_hint">Наведите камеру телефона на код</string>
+    <string name="donate_note">Приложение бесплатное, без рекламы и без сбора данных. Донат идёт на тестовые устройства и время разработки.</string>
 </resources>
